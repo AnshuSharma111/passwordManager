@@ -1,0 +1,53 @@
+from PyQt6 import QtCore, QtGui, QtWidgets
+
+
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(800, 601)
+        self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.title_label = QtWidgets.QLabel(parent=self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(30)
+        font.setBold(False)
+        self.title_label.setFont(font)
+        self.title_label.setObjectName("title_label")
+        self.verticalLayout.addWidget(self.title_label)
+        self.textLabel1 = QtWidgets.QLabel(parent=self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        font.setBold(False)
+        self.textLabel1.setFont(font)
+        self.textLabel1.setObjectName("textLabel1")
+        self.verticalLayout.addWidget(self.textLabel1)
+        self.inputField = QtWidgets.QPlainTextEdit(parent=self.centralwidget)
+        self.inputField.setObjectName("inputField")
+        self.verticalLayout.addWidget(self.inputField)
+        self.proceedButton = QtWidgets.QPushButton(parent=self.centralwidget)
+        self.proceedButton.setObjectName("proceedButton")
+        self.verticalLayout.addWidget(self.proceedButton)
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
+        self.menubar.setObjectName("menubar")
+        self.menuPassword_Manager = QtWidgets.QMenu(parent=self.menubar)
+        self.menuPassword_Manager.setObjectName("menuPassword_Manager")
+        MainWindow.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(parent=MainWindow)
+        self.statusbar.setObjectName("statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+        self.menubar.addAction(self.menuPassword_Manager.menuAction())
+
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.title_label.setText(_translate("MainWindow", "Password Manager"))
+        self.textLabel1.setText(_translate("MainWindow", "Enter Master Password"))
+        self.proceedButton.setText(_translate("MainWindow", "Proceed"))
+        self.menuPassword_Manager.setTitle(_translate("MainWindow", "Password Manager"))
