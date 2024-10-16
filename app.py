@@ -5,6 +5,7 @@ from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import QSize
 from welcomeWindow import Ui_welcomeWindow as welcomeWin
 from mainWindow import Ui_mainWindow as mainWin
+from customWidgets import wrongPassDialog, listItem
 from helper import *
 
 basedir = os.path.dirname(__file__)
@@ -35,7 +36,8 @@ class welcomeWindow(QtWidgets.QMainWindow, welcomeWin):
         if isAuthenticated:
             changeWindow(self, 1)
         else:
-            pass # trigger dialog box
+            dlg = wrongPassDialog()
+            dlg.exec()
 
 # main window
 class mainWindow(QtWidgets.QMainWindow, mainWin):
@@ -45,6 +47,16 @@ class mainWindow(QtWidgets.QMainWindow, mainWin):
 
         self.setWindowTitle(TITLE)
         self.setFixedSize(QSize(800, 558))
+        self.addPass.clicked.connect(self.addItem)
+    
+    def addItem(self):
+        newItem = listItem()
+        listI = QtWidgets.QListWidgetItem(self.passList)
+
+        listI.setSizeHint(newItem.sizeHint())
+        
+        self.passList.addItem(listI)
+        self.passList.setItemWidget(listI, newItem)
 
 app = QtWidgets.QApplication(sys.argv)
 app.setApplicationName(TITLE)
