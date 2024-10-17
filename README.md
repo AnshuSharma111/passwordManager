@@ -1,5 +1,5 @@
 # passwordManager
-This is something I am building over the weekend as a fun project. 
+This is something I am building as a fun project. 
 
 The aim is to create a simple password manager that can do the following:
 1) Store all passwords locally
