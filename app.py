@@ -5,8 +5,8 @@ from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import QSize
 from welcomeWindow import Ui_welcomeWindow as welcomeWin
 from mainWindow import Ui_mainWindow as mainWin
-from customWidgets import wrongPassDialog, listItem
-from helper import *
+from customWidgets import wrongPassDialog, listItem, createPasswordDialog
+from helper import fetchLatestData, authenticate, closeConnection
 
 basedir = os.path.dirname(__file__)
 icon_path = os.path.join(basedir, 'icon.ico')
@@ -50,13 +50,22 @@ class mainWindow(QtWidgets.QMainWindow, mainWin):
         self.addPass.clicked.connect(self.addItem)
     
     def addItem(self):
-        newItem = listItem()
-        listI = QtWidgets.QListWidgetItem(self.passList)
+        dialog = createPasswordDialog()
+        res = dialog.exec()
+        if res:
+            data = fetchLatestData()
+            newItem = listItem()
+            newItem.updateUI(data)
+            listI = QtWidgets.QListWidgetItem(self.passList)
 
-        listI.setSizeHint(newItem.sizeHint())
-        
-        self.passList.addItem(listI)
-        self.passList.setItemWidget(listI, newItem)
+            listI.setSizeHint(newItem.sizeHint())
+            
+            self.passList.addItem(listI)
+            self.passList.setItemWidget(listI, newItem)
+    
+    def closeEvent(self, event):
+        closeConnection()
+        event.accept()
 
 app = QtWidgets.QApplication(sys.argv)
 app.setApplicationName(TITLE)
