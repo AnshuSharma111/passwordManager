@@ -6,7 +6,7 @@ from PyQt6.QtCore import QSize
 from welcomeWindow import Ui_welcomeWindow as welcomeWin
 from mainWindow import Ui_mainWindow as mainWin
 from customWidgets import wrongPassDialog, listItem, createPasswordDialog
-from helper import fetchLatestData, authenticate, closeConnection
+from helper import fetchLatestData, authenticate, closeConnection, initialise
 
 basedir = os.path.dirname(__file__)
 icon_path = os.path.join(basedir, 'icon.ico')
@@ -45,24 +45,37 @@ class mainWindow(QtWidgets.QMainWindow, mainWin):
         super(mainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
 
+        to_render_data = initialise()
+        self.setup(to_render_data)
         self.setWindowTitle(TITLE)
         self.setFixedSize(QSize(800, 558))
-        self.addPass.clicked.connect(self.addItem)
+        self.addPass.clicked.connect(self.addNewItem)
+        self.delPass.clicked.connect(self.deleteItem)
+        self.passList.setSelectionMode(QtWidgets.QListWidget.SelectionMode.ExtendedSelection)
     
-    def addItem(self):
+    def setup(self, data):
+        for i in data:
+            self.addToList(i)
+    def addNewItem(self):
         dialog = createPasswordDialog()
         res = dialog.exec()
         if res:
             data = fetchLatestData()
-            newItem = listItem()
-            newItem.updateUI(data)
-            listI = QtWidgets.QListWidgetItem(self.passList)
+            self.addToList(data)
+    def addToList(self, data):
+        newItem = listItem()
+        newItem.updateUI(data)
+        listI = QtWidgets.QListWidgetItem(self.passList)
 
-            listI.setSizeHint(newItem.sizeHint())
-            
-            self.passList.addItem(listI)
-            self.passList.setItemWidget(listI, newItem)
-    
+        listI.setSizeHint(newItem.sizeHint())
+        
+        self.passList.addItem(listI)
+        self.passList.setItemWidget(listI, newItem)
+    def deleteItem(self):
+        toDelete = self.passList.selectedIndexes()
+        deletion_indices = []
+        for index in toDelete:
+            deletion_indices.append(index.row())
     def closeEvent(self, event):
         closeConnection()
         event.accept()

@@ -164,3 +164,4 @@ cython_debug/
 #test file
 test.py
 *.ui
+*.db
