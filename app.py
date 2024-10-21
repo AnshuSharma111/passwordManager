@@ -6,7 +6,7 @@ from PyQt6.QtCore import QSize
 from welcomeWindow import Ui_welcomeWindow as welcomeWin
 from mainWindow import Ui_mainWindow as mainWin
 from customWidgets import wrongPassDialog, listItem, createPasswordDialog
-from helper import fetchLatestData, authenticate, closeConnection, initialise
+from helper import fetchLatestData, authenticate, closeConnection, initialise, deleteFromDatabase
 
 basedir = os.path.dirname(__file__)
 icon_path = os.path.join(basedir, 'icon.ico')
@@ -62,6 +62,15 @@ class mainWindow(QtWidgets.QMainWindow, mainWin):
         if res:
             data = fetchLatestData()
             self.addToList(data)
+    def deleteItem(self):
+        selectedItems = self.passList.selectedItems()
+        deletion_indices = [self.passList.row(x)+1 for x in selectedItems]
+        if len(deletion_indices):
+            # Remove From Database
+            deleteFromDatabase(deletion_indices)
+
+            # Remove Graphically
+            self.deleteFromList(selectedItems)
     def addToList(self, data):
         newItem = listItem()
         newItem.updateUI(data)
@@ -71,11 +80,10 @@ class mainWindow(QtWidgets.QMainWindow, mainWin):
         
         self.passList.addItem(listI)
         self.passList.setItemWidget(listI, newItem)
-    def deleteItem(self):
-        toDelete = self.passList.selectedIndexes()
-        deletion_indices = []
-        for index in toDelete:
-            deletion_indices.append(index.row())
+    def deleteFromList(self, items):
+        for item in items:
+            self.passList.removeItemWidget(item)
+            self.passList.takeItem(self.passList.row(item))
     def closeEvent(self, event):
         closeConnection()
         event.accept()
