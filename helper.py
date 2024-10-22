@@ -1,8 +1,10 @@
 import sqlite3
+import bcrypt
 import os
 
 basedir = os.path.dirname(__file__)
 databasePath = os.path.join(basedir, 'userdata.db')
+masterPasswordFilePath = os.path.join(basedir, 'security_key.bin')
 
 conn = None
 cursor = None
@@ -38,9 +40,6 @@ def closeConnection():
     cursor.close()
     conn.close()
 
-def authenticate(text):
-    print(text)
-    return True
 
 def addToDatabase(title, username, password):
     global curIndex
@@ -73,9 +72,44 @@ def deleteFromDatabase(indices):
 def restructure(index):
     cursor.execute("UPDATE userData SET id = id - 1 WHERE id > ?", (index,))
     conn.commit()
+
 def fetchLatestData():
     data = cursor.execute('''SELECT * FROM userData
         ORDER BY id DESC
         LIMIT 1''')
     
     return data.fetchone()
+
+def checkMasterPassword() -> bool:
+    try:
+        with open(masterPasswordFilePath, 'rb') as passFile:
+            password = passFile.read()
+            print(password)
+
+            if not password:
+                return False
+            else:
+                return True
+    except:
+        print("Master Password does not exist!")
+        return False
+
+def setMasterPassword(password) -> None:
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password.encode(), salt)
+
+    with open(masterPasswordFilePath, 'wb') as passFile:
+        passFile.write(hashed_password)
+    print("Security key set up successfully!")
+
+def getMasterPassword():
+    with open(masterPasswordFilePath, 'rb') as passFile:
+        password = passFile.read()
+    return password
+
+def authenticate(text):
+    print("Entered Password: ", text)
+    with open(masterPasswordFilePath, 'rb') as f:
+        stored_hashed_password = f.read()
+
+    return bcrypt.checkpw(text.encode(), stored_hashed_password)

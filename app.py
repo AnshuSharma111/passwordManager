@@ -5,8 +5,8 @@ from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import QSize
 from welcomeWindow import Ui_welcomeWindow as welcomeWin
 from mainWindow import Ui_mainWindow as mainWin
-from customWidgets import wrongPassDialog, listItem, createPasswordDialog
-from helper import fetchLatestData, authenticate, closeConnection, initialise, deleteFromDatabase
+from customWidgets import wrongPassDialog, listItem, createPasswordDialog, createMasterPassword
+from helper import fetchLatestData, authenticate, closeConnection, initialise, deleteFromDatabase, checkMasterPassword
 
 basedir = os.path.dirname(__file__)
 icon_path = os.path.join(basedir, 'icon.ico')
@@ -24,6 +24,15 @@ def changeWindow(cur, windowIndex):
 class welcomeWindow(QtWidgets.QMainWindow, welcomeWin):
     def __init__(self, *args, obj=None, **kwargs):
         super(welcomeWindow, self).__init__(*args, **kwargs)
+        hasMasterPassword = checkMasterPassword()
+        if not hasMasterPassword:
+            dialog = createMasterPassword()
+            response = dialog.exec()
+            if not response:
+                # Close Application
+                print("Closing Application...")
+                sys.exit(0)
+
         self.setupUi(self)
 
         self.setWindowTitle(TITLE)
@@ -94,7 +103,6 @@ app.setWindowIcon(QIcon(icon_path))
 
 welcomeWindow = welcomeWindow()
 mainWindow = mainWindow()
-
 welcomeWindow.show()
 
 sys.exit(app.exec())

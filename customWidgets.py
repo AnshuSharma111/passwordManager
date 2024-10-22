@@ -1,5 +1,5 @@
 from PyQt6 import QtWidgets
-from helper import addToDatabase
+from helper import addToDatabase, setMasterPassword
 import pyperclip
 
 class wrongPassDialog(QtWidgets.QDialog):
@@ -119,4 +119,36 @@ class createPasswordDialog(QtWidgets.QDialog):
             return
         # Send it to Database and UI
         addToDatabase(title, username, password)
+        self.accept()
+    
+class createMasterPassword(QtWidgets.QDialog):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("Set Master Password")
+
+        self.setMasterPassword = QtWidgets.QDialogButtonBox((
+            QtWidgets.QDialogButtonBox.StandardButton.Ok
+        ))
+        self.pLabel = QtWidgets.QLabel("Set Master Password")
+        self.pLineEdit = QtWidgets.QLineEdit()
+
+        self.setMasterPassword.accepted.connect(self.sendData)
+
+        layout = QtWidgets.QVBoxLayout()
+        layout.addWidget(self.pLabel)
+        layout.addWidget(self.pLineEdit)
+        layout.addWidget(self.setMasterPassword)
+
+        self.setLayout(layout)
+    def sendData(self):
+        # Fetch Data From Form
+        password = self.pLineEdit.text()
+        # Verify Data
+        if not password:
+            dialog = pleaseEnterValidData()
+            dialog.exec()
+            return
+        # Send it to storage
+        setMasterPassword(password)
         self.accept()
