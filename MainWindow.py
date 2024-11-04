@@ -13,12 +13,6 @@ class Ui_mainWindow(object):
         font.setPointSize(16)
         self.addPass.setFont(font)
         self.addPass.setObjectName("addPass")
-        self.changeMasterPass = QtWidgets.QPushButton(parent=self.centralwidget)
-        self.changeMasterPass.setGeometry(QtCore.QRect(500, 30, 281, 41))
-        font = QtGui.QFont()
-        font.setPointSize(16)
-        self.changeMasterPass.setFont(font)
-        self.changeMasterPass.setObjectName("changeMasterPass")
         self.passList = QtWidgets.QListWidget(parent=self.centralwidget)
         self.passList.setGeometry(QtCore.QRect(20, 80, 761, 471))
         self.passList.setObjectName("passList")
@@ -44,5 +38,4 @@ class Ui_mainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         mainWindow.setWindowTitle(_translate("mainWindow", "MainWindow"))
         self.addPass.setText(_translate("mainWindow", "+"))
-        self.changeMasterPass.setText(_translate("mainWindow", "⚙Change Master Password"))
         self.delPass.setText(_translate("mainWindow", "-"))

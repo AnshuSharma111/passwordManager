@@ -165,4 +165,4 @@ cython_debug/
 test.py
 *.ui
 *.db
-security_key.bin
+credentials.json

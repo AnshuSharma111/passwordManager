@@ -12,41 +12,37 @@ basedir = os.path.dirname(__file__)
 icon_path = os.path.join(basedir, 'icon.ico')
 TITLE = "Password Manager"
 
-# 0 -> welcomeWin, 1 -> mainWin
-def changeWindow(cur, windowIndex):
-    cur.hide()
-    if windowIndex == 0:
-        welcomeWindow.show()
-    else:
-        mainWindow.show()
-
 # welcome window
 class welcomeWindow(QtWidgets.QMainWindow, welcomeWin):
     def __init__(self, *args, obj=None, **kwargs):
         super(welcomeWindow, self).__init__(*args, **kwargs)
-        hasMasterPassword = checkMasterPassword()
-        if not hasMasterPassword:
-            dialog = createMasterPassword()
-            response = dialog.exec()
-            if not response:
-                # Close Application
-                print("Closing Application...")
-                sys.exit(0)
 
         self.setupUi(self)
-
         self.setWindowTitle(TITLE)
         self.setFixedSize(QSize(800, 558))
+        self.attempts = 3
 
-        self.proceedButton.clicked.connect(self.proceed)
-    
-    def proceed(self):
-        isAuthenticated = authenticate(self.inputField.toPlainText())
+        self.proceedButton.clicked.connect(self.authenticatePassword)
+        self.inputField.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
+
+    def authenticatePassword(self):
+        isAuthenticated = authenticate(self.inputField.text())
         if isAuthenticated:
-            changeWindow(self, 1)
+            print("Correct Password...Proceeding...")
+            self.proceedToMain() # successful attempt
         else:
             dlg = wrongPassDialog()
             dlg.exec()
+            self.attempts -= 1 # unsuccessful attempt
+            if self.attempts == 0:
+                print("Out of Attempts...Closing Application...")
+                sys.exit(0)
+    
+    def proceedToMain(self):
+        self.mainWindow = mainWindow()
+        self.mainWindow.show()
+
+        self.hide()
 
 # main window
 class mainWindow(QtWidgets.QMainWindow, mainWin):
@@ -101,8 +97,19 @@ app = QtWidgets.QApplication(sys.argv)
 app.setApplicationName(TITLE)
 app.setWindowIcon(QIcon(icon_path))
 
+# check if master password exits or not
+hasMasterPassword = checkMasterPassword()
+if not hasMasterPassword:
+    dialog = createMasterPassword()
+    response = dialog.exec()
+    if not response:
+        print("Closing Application...")
+        sys.exit(0)
+else:
+    print("Password Exists. Proceeding...")
+
+# Block access to rest of app until authenticated
 welcomeWindow = welcomeWindow()
-mainWindow = mainWindow()
 welcomeWindow.show()
 
 sys.exit(app.exec())
