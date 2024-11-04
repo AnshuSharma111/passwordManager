@@ -8,5 +8,5 @@ The aim is to create a simple password manager that can do the following:
 
 What I hope to learn by engaging in this exercise is:
 1) PyQt6 : GUI using python
-2) Basic Cryptography techniques
-3) How to handle essential data
+2) Cryptography techniques
+3) Database Management
