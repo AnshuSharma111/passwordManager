@@ -1,4 +1,4 @@
-# passwordManager
+# Password Manager
 An app built in python using Qt that stores all passwords in a secure manner in a sqlite database locally. This app was built for personal use. Uses hashing to securely store passwords.
 Also provides a clean and minimal interface built in Qt and Python as GUI.
 ---
@@ -14,7 +14,9 @@ What I hope to learn by engaging in this exercise is:
 2. Cryptography techniques
 3. Database Management
 ---
+
 #**Outcomes**
+
 All above aims were satisfied in good capacity
 
 1. Learnt PyQt6 and how to build desktop interfaces
@@ -23,6 +25,7 @@ All above aims were satisfied in good capacity
 4. Learnt how to package and distribute app
 
 ---
+
 #**Download**
 
 You can download and use password manager from here: https://drive.google.com/file/d/1mN8BlbMzxPWu0eEQ4gTZnke3U8QtfeLp/view?usp=sharing
